@@ -8,7 +8,7 @@ class ClassComponent extends Component {
   };
 
   /**
-   * useEffect(()=>{}) -> componentDidMount(){}
+   * useEffect(()=>{},[]) -> componentDidMount(){}
    * useEffect(()=>{}, [dep]) -> componentDidUpdate(){}
    * useEffect(()=>{  return fn }, [dep]) -> componentWillUnmount(){}
    *

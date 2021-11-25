@@ -1,31 +1,38 @@
 import { Component } from "react";
-import ClassComponent from "./components/ClassComponent";
+import FakeTodos from "./components/FakeTodos";
+import TodoForm from "./components/TodoForm";
+import TodoList from "./components/TodoList";
+
+const LOCALSTORAGE_KEY = "todos";
 
 class App extends Component {
-  state = {
-    todos: [],
-    inputVal: "",
+  constructor() {
+    super();
+    const lsItems = localStorage.getItem(LOCALSTORAGE_KEY);
+
+    this.state = {
+      todos: lsItems ? JSON.parse(lsItems) : [],
+      isButtonClicked: false,
+    };
+  }
+
+  manageLocalStorage = (todoList) => {
+    localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(todoList));
+    this.setState({ todos: todoList });
   };
 
   // const [todos, setTodos]= useState([ {test:"", id: Date.now(), completed:false} ])
 
-  handleInputChange = (event) => {
-    this.setState({ inputVal: event.target.value });
-  };
-
-  addNewTodo = () => {
-    this.setState({
-      todos: [
-        ...this.state.todos,
-        {
-          text: this.state.inputVal,
-          id: Date.now(),
-          completed: false,
-        },
-      ],
-    });
-
-    this.setState({ inputVal: "" });
+  addNewTodo = (val) => {
+    const newTodos = [
+      ...this.state.todos,
+      {
+        text: val,
+        id: Date.now(),
+        completed: false,
+      },
+    ];
+    this.manageLocalStorage(newTodos);
   };
 
   markComleted = (id) => {
@@ -39,7 +46,7 @@ class App extends Component {
       return el;
     });
 
-    this.setState({ todos: updatedTodos });
+    this.manageLocalStorage(updatedTodos);
   };
 
   removeTodo = () => {
@@ -47,7 +54,7 @@ class App extends Component {
       return el.completed === false;
     });
 
-    this.setState({ todos: filteredTodos });
+    this.manageLocalStorage(filteredTodos);
   };
 
   render() {
@@ -55,32 +62,28 @@ class App extends Component {
     console.log("todos: ", this.state.todos);
     return (
       <div className="App">
-        {/* <ClassComponent /> */}
-        <h1> My Todos:</h1>
+        <button
+          onClick={() =>
+            this.setState({ isButtonClicked: !this.state.isButtonClicked })
+          }
+        >
+          {!this.state.isButtonClicked ? "Show Fake Todos" : "Show My Todos"}
+        </button>
 
-        <form onSubmit={(event) => event.preventDefault()}>
-          <input
-            type="text"
-            placeholder="Add todo..."
-            value={this.state.inputVal}
-            onChange={this.handleInputChange}
-          />
-          <button onClick={this.addNewTodo}>Add Todo</button>
-          <button onClick={this.removeTodo}>Remove Todo</button>
-        </form>
-
-        {this.state.todos.map((todo) => {
-          return (
-            <div key={todo.id}>
-              <input
-                type="checkbox"
-                checked={todo.completed}
-                onChange={() => this.markComleted(todo.id)}
-              />
-              {todo.text}
-            </div>
-          );
-        })}
+        {this.state.isButtonClicked ? (
+          <FakeTodos />
+        ) : (
+          <>
+            <TodoForm
+              addNewTodo={this.addNewTodo}
+              removeTodo={this.removeTodo}
+            />
+            <TodoList
+              todos={this.state.todos}
+              markComleted={this.markComleted}
+            />
+          </>
+        )}
       </div>
     );
   }
