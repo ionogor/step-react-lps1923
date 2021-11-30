@@ -3,7 +3,6 @@ import * as yup from "yup";
 import {
   FormControl,
   FormLabel,
-  FormErrorMessage,
   Button,
   Input,
   Container,
@@ -59,16 +58,16 @@ const RegisterForm = () => {
     yup
       .reach(schema, event.target.name)
       .validate(event.target.value)
-      .then(() =>
+      .then(() => {
         setErrorMessage({
           ...errorMessage,
           [event.target.name]: "",
-        })
-      )
+        });
+      })
       .catch((err) => {
         setErrorMessage({
           ...errorMessage,
-          [event.target.name]: err.error[0],
+          [event.target.name]: err.errors[0],
         });
       });
   };
@@ -93,10 +92,10 @@ const RegisterForm = () => {
     <Container>
       <form onSubmit={handleFormSubmit}>
         <FormControl>
-          {errorMessage.firstName ? (
-            <FormErrorMessage>{errorMessage.firstName}</FormErrorMessage>
-          ) : null}
           <FormLabel>First Name</FormLabel>
+          {errorMessage.firstName ? (
+            <p style={{ color: "red" }}>{errorMessage.firstName}</p>
+          ) : null}
           <Input
             type="text"
             name="firstName"
@@ -106,6 +105,9 @@ const RegisterForm = () => {
         </FormControl>
         <FormControl>
           <FormLabel>Last Name</FormLabel>
+          {errorMessage.lastName ? (
+            <p style={{ color: "red" }}>{errorMessage.lastName}</p>
+          ) : null}
           <Input
             type="text"
             name="lastName"
@@ -115,6 +117,9 @@ const RegisterForm = () => {
         </FormControl>
         <FormControl>
           <FormLabel>Email</FormLabel>
+          {errorMessage.email ? (
+            <p style={{ color: "red" }}>{errorMessage.email}</p>
+          ) : null}
           <Input
             type="email"
             name="email"
@@ -124,6 +129,9 @@ const RegisterForm = () => {
         </FormControl>
         <FormControl>
           <FormLabel>Password</FormLabel>
+          {errorMessage.password ? (
+            <p style={{ color: "red" }}>{errorMessage.password}</p>
+          ) : null}
           <Input
             type="password"
             name="password"
@@ -133,6 +141,9 @@ const RegisterForm = () => {
         </FormControl>
         <FormControl>
           <FormLabel>Role</FormLabel>
+          {errorMessage.role ? (
+            <p style={{ color: "red" }}>{errorMessage.role}</p>
+          ) : null}
           <Select
             name="role"
             value={formData.role}
