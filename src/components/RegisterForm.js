@@ -7,7 +7,6 @@ import {
   Input,
   Container,
   Select,
-  Checkbox,
 } from "@chakra-ui/react";
 
 const initialData = {
@@ -22,24 +21,25 @@ const initialData = {
 let schema = yup.object().shape({
   firstName: yup
     .string("FirstName is invalid.")
-    .min(3, "FirstName must have at least 3 chars.")
-    .required("FirstName cannot be empty."),
+    .required("FirstName cannot be empty.")
+    .min(3, "FirstName must have at least 3 chars."),
   lastName: yup
     .string("LastName is invalid.")
-    .max(10, "LastName must have maximum 10 chars.")
-    .required("LastName cannot be empty."),
+    .required("LastName cannot be empty.")
+    .max(10, "LastName must have maximum 10 chars."),
   email: yup
     .string()
-    .email("Invalid email.")
-    .required("Email cannot be empty."),
+    .required("Email cannot be empty.")
+    .email("Invalid email."),
   password: yup
     .string()
+    .required("Password cannot be empty.")
     .matches(
-      "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[]:;<>,.?/~_+-=|]).{8,32}$",
-      "Invalid Password"
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/,
+      "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
     ),
   role: yup.string().required(),
-  terms: yup.boolean().oneOf[true],
+  terms: yup.boolean().oneOf([true], "Must Accept Terms and Conditions"),
 });
 
 const RegisterForm = () => {
@@ -52,12 +52,17 @@ const RegisterForm = () => {
     role: "",
     terms: "",
   });
-  //console.log("formData", formData);
+
   console.log("errMess", errorMessage);
+
   const handleFieldValidation = (event) => {
     yup
       .reach(schema, event.target.name)
-      .validate(event.target.value)
+      .validate(
+        event.target.type === "checkbox"
+          ? event.target.checked
+          : event.target.value
+      )
       .then(() => {
         setErrorMessage({
           ...errorMessage,
@@ -86,6 +91,7 @@ const RegisterForm = () => {
   const handleFormSubmit = (event) => {
     event.preventDefault();
     console.log("formData: ", formData);
+    setFormData(initialData);
   };
 
   return (
@@ -155,13 +161,13 @@ const RegisterForm = () => {
           </Select>
         </FormControl>
         <FormControl mt="10px">
-          <Checkbox
+          <input
             name="terms"
+            type="checkbox"
             checked={formData.terms}
             onChange={handleInputChange}
-          >
-            Accept our Terms and Conditions.
-          </Checkbox>
+          />
+          <span> Accept our Terms and Conditions.</span>
         </FormControl>
         <Button type="submit" mt="10px" colorScheme="blue">
           Submit
