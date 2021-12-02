@@ -65,7 +65,7 @@ const RegisterForm = () => {
 
     helper();
   }, [formData]);
-
+  //comentariu
   console.log("errMess", errorMessage);
 
   const handleFieldValidation = (event) => {
