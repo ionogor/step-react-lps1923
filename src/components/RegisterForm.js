@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as yup from "yup";
+import axios from "axios";
 import {
   FormControl,
   FormLabel,
@@ -44,6 +45,7 @@ let schema = yup.object().shape({
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState(initialData);
+  const [buttonDisabled, setButtonDisabled] = useState(true);
   const [errorMessage, setErrorMessage] = useState({
     firstName: "",
     lastName: "",
@@ -52,6 +54,17 @@ const RegisterForm = () => {
     role: "",
     terms: "",
   });
+
+  useEffect(() => {
+    async function helper() {
+      const valid = await schema.isValid(formData);
+
+      /// true = true
+      setButtonDisabled(!valid);
+    }
+
+    helper();
+  }, [formData]);
 
   console.log("errMess", errorMessage);
 
@@ -91,12 +104,17 @@ const RegisterForm = () => {
   const handleFormSubmit = (event) => {
     event.preventDefault();
     console.log("formData: ", formData);
+
+    axios.post("https://reqres.in/api/users", formData).then((res) => {
+      console.log(res.data);
+    });
+
     setFormData(initialData);
   };
 
   return (
     <Container>
-      <form onSubmit={handleFormSubmit}>
+      <form>
         <FormControl>
           <FormLabel>First Name</FormLabel>
           {errorMessage.firstName ? (
@@ -169,7 +187,13 @@ const RegisterForm = () => {
           />
           <span> Accept our Terms and Conditions.</span>
         </FormControl>
-        <Button type="submit" mt="10px" colorScheme="blue">
+        <Button
+          type="submit"
+          mt="10px"
+          colorScheme="blue"
+          onClick={handleFormSubmit}
+          disabled={buttonDisabled}
+        >
           Submit
         </Button>
       </form>
