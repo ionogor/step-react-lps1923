@@ -1,14 +1,14 @@
-import { useState } from "react";
 import { useContext } from "react";
 import { CounterContext } from "./contexts/counterContext";
+import { INCREMENT, DECREMENT } from "./contexts/counterContext";
 
 function App() {
-  const { counter, setCounter } = useContext(CounterContext);
+  const { counter, dispatch } = useContext(CounterContext);
   const increment = () => {
-    setCounter(counter + 1);
+    dispatch({ type: INCREMENT });
   };
   const decrement = () => {
-    setCounter(counter - 1);
+    dispatch({ type: DECREMENT });
   };
   return (
     <div className="App">
