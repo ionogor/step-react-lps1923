@@ -1,20 +1,25 @@
-import { useContext } from "react";
-import { CounterContext } from "./contexts/counterContext";
-import { INCREMENT, DECREMENT } from "./contexts/counterContext";
-
+import { useSelector, useDispatch } from "react-redux"; // cu primul avem acces la state cu al doilea la dipatch
+import { increment, decrement } from "./Actions/CounterActions";
 function App() {
-  const { counter, dispatch } = useContext(CounterContext);
-  const increment = () => {
-    dispatch({ type: INCREMENT });
+  const { counter } = useSelector((state) => state);
+
+  console.log("counter", counter);
+
+  const dispatch = useDispatch();
+
+  console.log("Dispatch", dispatch);
+
+  const handleincrement = () => {
+    dispatch(increment());
   };
-  const decrement = () => {
-    dispatch({ type: DECREMENT });
+  const handledecrement = () => {
+    dispatch(decrement());
   };
   return (
     <div className="App">
       <h2>{counter}</h2>
-      <button onClick={increment}>+</button>
-      <button onClick={decrement}>-</button>
+      <button onClick={handleincrement}>+</button>
+      <button onClick={handledecrement}>-</button>
     </div>
   );
 }
