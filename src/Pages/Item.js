@@ -25,7 +25,7 @@ const Item = ({ books }) => {
       {item ? (
         <div>
           <div className="product">
-            <img src={item.image} />
+            <img src={item.image} alt="img" />
           </div>
 
           <table>

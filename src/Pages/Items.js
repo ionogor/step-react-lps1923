@@ -1,8 +1,6 @@
 import React from "react";
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { Link, Route } from "react-router-dom";
-import Item from "./Item";
+
+import { Link } from "react-router-dom";
 
 const Items = ({ books }) => {
   console.log(books);

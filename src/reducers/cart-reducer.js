@@ -17,7 +17,7 @@ const CartReducer = (state = initialState, action) => {
       return {
         ...state,
         cartItems: state.cartItems.filter((item) => {
-          return item.isbn13 !== action.payload;
+          return item !== action.payload;
         }),
       };
 
